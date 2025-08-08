@@ -17,7 +17,7 @@ app.use("/api", routerUser);
 initDB().then(() => {
   app.listen(PORT, () => {
     console.log(
-      `Conexión con la base de datos establecida en http://localhost:${PORT}/api`
+      `Conexión con la base de datos establecida \nhttp://localhost:${PORT}/api/task \nhttp://localhost:${PORT}/api/user`
     );
   });
 });

@@ -26,26 +26,27 @@ export const createTask = async (req, res) => {
     const crearTarea = await Task.create(req.body);
     return res.status(201).json(crearTarea);
   } catch (error) {
-    res.error(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
 export const getByIdTask = async (req, res) => {
   try {
     const task = await task.findByPk(req.params.id);
-    if (!Task) return res.status(404).json({ message: "El tarea no existe" });
-    return res.status(200).json(Task);
+    if (!task) return res.status(404).json({ message: "La tarea no existe" });
+    return res.status(200).json(task);
   } catch (error) {
-    res.error(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
 export const getAllTask = async (req, res) => {
   try {
     const tasks = await Task.findAll();
+    if (tasks.length == 0) return res.json({ message: "No existen tareas" });
     return res.status(200).json(tasks);
   } catch (error) {
-    res.error(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -81,7 +82,7 @@ export const updateTask = async (req, res) => {
       return res.status(404).json({ message: "Tarea no encontrada" });
     }
   } catch (error) {
-    res.error(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -94,6 +95,6 @@ export const deleteTask = async (req, res) => {
       return res.status(404).json({ message: "El tarea no existe" });
     return res.status(200).json({ message: "Tarea eliminada" });
   } catch (error) {
-    res.error(500).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
