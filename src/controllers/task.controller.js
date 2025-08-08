@@ -58,8 +58,10 @@ export const updateTask = async (req, res) => {
     if (
       title === "" ||
       title === undefined ||
+      title === null ||
       description === "" ||
-      description === undefined
+      description === undefined ||
+      description === null
     )
       return res.status(400).json({
         message: "Los campos de title y description no deben estar vacios",

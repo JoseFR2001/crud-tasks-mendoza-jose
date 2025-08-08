@@ -7,10 +7,13 @@ export const createUser = async (req, res) => {
     if (
       name === "" ||
       name === undefined ||
+      name === null ||
       email === "" ||
       email === undefined ||
+      email === null ||
       password === "" ||
-      password === undefined
+      password === undefined ||
+      password === null
     )
       return res
         .status(400)
