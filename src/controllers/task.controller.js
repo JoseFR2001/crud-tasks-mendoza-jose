@@ -1,4 +1,5 @@
 import Task from "../models/task.model.js";
+import { Op } from "sequelize";
 
 export const createTask = async (req, res) => {
   try {
@@ -64,7 +65,9 @@ export const updateTask = async (req, res) => {
         message: "Los campos de title y description no deben estar vacios",
       });
 
-    const tareaExiste = await Task.findOne({ where: { title: title } });
+    const tareaExiste = await Task.findOne({
+      where: { title: title, id: { [Op.ne]: req.params.id } },
+    });
     if (tareaExiste)
       return res.status(400).json({ message: "La tarea ya existe" });
 

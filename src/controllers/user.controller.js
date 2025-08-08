@@ -1,4 +1,5 @@
 import User from "../models/user.model.js";
+import { Op } from "sequelize";
 
 export const createUser = async (req, res) => {
   try {
@@ -86,7 +87,9 @@ export const updateUser = async (req, res) => {
         .status(400)
         .json({ message: "El email no debe tener más de 100 caracteres" });
 
-    const emailExiste = await User.findOne({ where: { email: email } });
+    const emailExiste = await User.findOne({
+      where: { email: email, id: { [Op.ne]: req.params.id } },
+    });
     if (emailExiste)
       return res.status(400).json({ message: "Ya existe el email" });
 
