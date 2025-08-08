@@ -2,6 +2,27 @@ import Task from "../models/task.model.js";
 
 export const createTask = async (req, res) => {
   try {
+    const { title, description, isComplete } = req.body;
+
+    if (
+      title === "" ||
+      title === undefined ||
+      description === "" ||
+      description === undefined
+    )
+      return res.status(400).json({
+        message: "Los campos de title y description no deben estar vacios",
+      });
+
+    const tareaExiste = await Task.findOne({ where: { title: title } });
+    if (tareaExiste)
+      return res.status(400).json({ message: "La tarea ya existe" });
+
+    if (typeof isComplete !== "boolean")
+      return res
+        .status(400)
+        .json({ message: "isComplete debe ser un booleano" });
+
     const crearTarea = await Task.create(req.body);
     return res.status(201).json(crearTarea);
   } catch (error) {
@@ -30,6 +51,26 @@ export const getAllTask = async (req, res) => {
 
 export const updateTask = async (req, res) => {
   try {
+    const { title, description, isComplete } = req.body;
+
+    if (
+      title === "" ||
+      title === undefined ||
+      description === "" ||
+      description === undefined
+    )
+      return res.status(400).json({
+        message: "Los campos de title y description no deben estar vacios",
+      });
+
+    const tareaExiste = await Task.findOne({ where: { title: title } });
+    if (tareaExiste)
+      return res.status(400).json({ message: "La tarea ya existe" });
+
+    if (typeof isComplete !== "boolean")
+      return res
+        .status(400)
+        .json({ message: "isComplete debe ser un booleano" });
     const [update] = await Task.update(req.body, {
       where: { id: req.params.id },
     });
