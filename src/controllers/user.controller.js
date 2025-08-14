@@ -1,3 +1,4 @@
+import AdditionalInfo from "../models/additional_info.model.js";
 import Task from "../models/task.model.js";
 import User from "../models/user.model.js";
 import { Op } from "sequelize";
@@ -72,6 +73,9 @@ export const getAllUser = async (req, res) => {
         {
           model: Task,
           attributes: { exclude: ["user_id"] },
+        },
+        {
+          model: AdditionalInfo,
         },
       ],
     });

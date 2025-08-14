@@ -5,7 +5,7 @@ import {
   getAllAdditionalInfo,
   getByAIdAdditionalInfo,
   updateAdditionalInfo,
-} from "../controllers/additional_info.controller";
+} from "../controllers/additional_info.controller.js";
 
 const routerAdditionalInfo = Router();
 
