@@ -1,6 +1,7 @@
 import Task from "../models/task.model.js";
 import { Op } from "sequelize";
 import User from "../models/user.model.js";
+import TaskType from "../models/tasktype.model.js";
 
 export const createTask = async (req, res) => {
   try {
@@ -63,6 +64,7 @@ export const getByIdTask = async (req, res) => {
           attributes: { exclude: ["password"] },
         },
       ],
+      include: [{ model: TaskType }],
     });
     if (!task) return res.status(404).json({ message: "La tarea no existe" });
     return res.status(200).json(task);
@@ -78,6 +80,7 @@ export const getAllTask = async (req, res) => {
         exclude: ["user_id"],
       },
       include: [{ model: User, attributes: { exclude: ["password"] } }],
+      include: [{ model: TaskType }],
     });
     if (tasks.length == 0) return res.json({ message: "No existen tareas" });
     return res.status(200).json(tasks);

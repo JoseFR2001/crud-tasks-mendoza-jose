@@ -57,6 +57,11 @@ export const getByIdUser = async (req, res) => {
           attributes: { exclude: ["user_id"] },
         },
       ],
+      include: [
+        {
+          model: AdditionalInfo,
+        },
+      ],
     });
     if (!user) return res.status(404).json({ message: "El usuario no existe" });
     return res.status(200).json(user);
@@ -74,6 +79,8 @@ export const getAllUser = async (req, res) => {
           model: Task,
           attributes: { exclude: ["user_id"] },
         },
+      ],
+      include: [
         {
           model: AdditionalInfo,
         },
