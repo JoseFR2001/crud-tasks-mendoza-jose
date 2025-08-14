@@ -3,12 +3,23 @@ import AdditionalInfo from "../models/additional_info.model.js";
 
 export const createAdditionalInfo = async (req, res) => {
   try {
-    const { phone_number, address } = req.body;
+    const { phone_number, address, user_id } = req.body;
     if (!phone_number || !address)
       return res
         .status(400)
         .json({ message: "Los campos no deben ser vacios " });
 
+    if (!user_id)
+      return res
+        .status(400)
+        .json({ message: "Se le debe asignar un usuario a la tarea" });
+
+    const usuario = await User.findByPk(user_id);
+    if (!usuario) {
+      return res.status(404).json({
+        message: "El usuario no existe",
+      });
+    }
     if (phone_number.length > 20)
       return res.status(400).json({
         message: "El numero de telefono no debe tener mas de 20 caracteres",
@@ -61,11 +72,23 @@ export const getByAIdAdditionalInfo = async (req, res) => {
 
 export const updateAdditionalInfo = async (req, res) => {
   try {
-    const { phone_number, address } = req.body;
+    const { phone_number, address, user_id } = req.body;
     if (!phone_number || !address)
       return res
         .status(400)
         .json({ message: "Los campos no deben ser vacios " });
+
+    if (!user_id)
+      return res
+        .status(400)
+        .json({ message: "Se le debe asignar un usuario a la tarea" });
+
+    const usuario = await User.findByPk(user_id);
+    if (!usuario) {
+      return res.status(404).json({
+        message: "El usuario no existe",
+      });
+    }
 
     if (phone_number.length > 20)
       return res.status(400).json({
