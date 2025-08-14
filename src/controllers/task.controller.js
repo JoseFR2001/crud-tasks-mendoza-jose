@@ -1,9 +1,10 @@
 import Task from "../models/task.model.js";
 import { Op } from "sequelize";
+import User from "../models/user.model.js";
 
 export const createTask = async (req, res) => {
   try {
-    const { title, description, isComplete } = req.body;
+    const { title, description, isComplete, user_id } = req.body;
 
     if (
       title === "" ||
@@ -13,6 +14,28 @@ export const createTask = async (req, res) => {
     )
       return res.status(400).json({
         message: "Los campos de title y description no deben estar vacios",
+      });
+
+    if (!user_id)
+      return res
+        .status(400)
+        .json({ message: "Se le debe asignar un usuario a la tarea" });
+
+    const usuario = await User.findByPk(user_id);
+    if (!usuario) {
+      return res.status(404).json({
+        message: "El usuario no existe",
+      });
+    }
+
+    if (title.length > 100)
+      return res
+        .status(400)
+        .json({ message: "El title no debe tener más de 100 caracteres" });
+
+    if (description.length > 100)
+      return res.status(400).json({
+        message: "La description no debe tener más de 100 caracteres",
       });
 
     const tareaExiste = await Task.findOne({ where: { title: title } });
@@ -33,7 +56,14 @@ export const createTask = async (req, res) => {
 
 export const getByIdTask = async (req, res) => {
   try {
-    const task = await task.findByPk(req.params.id);
+    const task = await Task.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          attributes: { exclude: ["password"] },
+        },
+      ],
+    });
     if (!task) return res.status(404).json({ message: "La tarea no existe" });
     return res.status(200).json(task);
   } catch (error) {
@@ -43,7 +73,12 @@ export const getByIdTask = async (req, res) => {
 
 export const getAllTask = async (req, res) => {
   try {
-    const tasks = await Task.findAll();
+    const tasks = await Task.findAll({
+      attributes: {
+        exclude: ["user_id"],
+      },
+      include: [{ model: User, attributes: { exclude: ["password"] } }],
+    });
     if (tasks.length == 0) return res.json({ message: "No existen tareas" });
     return res.status(200).json(tasks);
   } catch (error) {

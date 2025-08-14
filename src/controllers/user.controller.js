@@ -1,3 +1,4 @@
+import Task from "../models/task.model.js";
 import User from "../models/user.model.js";
 import { Op } from "sequelize";
 
@@ -100,6 +101,7 @@ export const updateUser = async (req, res) => {
       return res
         .status(400)
         .json({ message: "El password no debe tener más de 100 caracteres" });
+
     const [update] = await User.update(req.body, {
       where: { id: req.params.id },
     });
