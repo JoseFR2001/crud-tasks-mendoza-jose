@@ -5,7 +5,7 @@ import routerTask from "./src/routes/task.routes.js";
 import routerUser from "./src/routes/user.routes.js";
 import routerAdditionalInfo from "./src/routes/additionalInfo.routes.js";
 import routerTaskType from "./src/routes/tasktype.routes.js";
-import Task_TaskType from "./src/models/task_tasktype.model.js";
+import routerTaskTaksType from "./src/routes/tasktasktype.routes.js";
 
 dotenv.config();
 
@@ -18,6 +18,7 @@ app.use("/api", routerTask);
 app.use("/api", routerUser);
 app.use("/api", routerAdditionalInfo);
 app.use("/api", routerTaskType);
+app.use("/api", routerTaskTaksType);
 
 initDB().then(() => {
   app.listen(PORT, () => {

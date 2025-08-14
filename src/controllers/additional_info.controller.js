@@ -1,5 +1,6 @@
 import { Op } from "sequelize";
 import AdditionalInfo from "../models/additional_info.model.js";
+import User from "../models/user.model.js";
 
 export const createAdditionalInfo = async (req, res) => {
   try {
@@ -9,7 +10,7 @@ export const createAdditionalInfo = async (req, res) => {
         .status(400)
         .json({ message: "Los campos no deben ser vacios " });
 
-    if (!user_id)
+    if (!user_id || !NUMBER(user_id))
       return res
         .status(400)
         .json({ message: "Se le debe asignar un usuario a la tarea" });
@@ -25,10 +26,10 @@ export const createAdditionalInfo = async (req, res) => {
         message: "El numero de telefono no debe tener mas de 20 caracteres",
       });
 
-    const phoneNumberUnico = await AdditionalInfo.findOne({
+    const telefonoUnico = await AdditionalInfo.findOne({
       where: { phone_number: phone_number },
     });
-    if (phoneNumberUnico)
+    if (telefonoUnico)
       return res
         .status(400)
         .json({ message: "Ya existe ese numero de telefono" });
@@ -37,8 +38,8 @@ export const createAdditionalInfo = async (req, res) => {
         .status(400)
         .json({ message: "La direccion debe tener mas de 100 caracteres" });
 
-    const informacion = await AdditionalInfo.create(req.body);
-    return res.status(201).json(informacion);
+    const info = await AdditionalInfo.create(req.body);
+    return res.status(201).json(info);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
@@ -46,7 +47,13 @@ export const createAdditionalInfo = async (req, res) => {
 
 export const getAllAdditionalInfo = async (req, res) => {
   try {
-    const getAll = AdditionalInfo.findAll();
+    const getAll = AdditionalInfo.findAll({
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
     if (getAll.length == 0)
       return res.json({
         message: "No existe informacion adicional de ningun usuario",
@@ -59,7 +66,13 @@ export const getAllAdditionalInfo = async (req, res) => {
 
 export const getByAIdAdditionalInfo = async (req, res) => {
   try {
-    const getById = await AdditionalInfo.findByPk(req.params.id);
+    const getById = await AdditionalInfo.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+        },
+      ],
+    });
     if (!getById)
       return res
         .status(404)
@@ -95,10 +108,10 @@ export const updateAdditionalInfo = async (req, res) => {
         message: "El numero de telefono no debe tener mas de 20 caracteres",
       });
 
-    const phoneNumberUnico = await AdditionalInfo.findOne({
+    const telefonoUnico = await AdditionalInfo.findOne({
       where: { phone_number: phone_number, id: { [Op.ne]: req.params.id } },
     });
-    if (phoneNumberUnico)
+    if (telefonoUnico)
       return res
         .status(400)
         .json({ message: "Ya existe ese numero de telefono" });
@@ -111,8 +124,8 @@ export const updateAdditionalInfo = async (req, res) => {
       where: { id: req.params.id },
     });
     if (update) {
-      const addInfoActualizado = await AdditionalInfo.findByPk(req.params.id);
-      return res.status(200).json(addInfoActualizado);
+      const infoActualizado = await AdditionalInfo.findByPk(req.params.id);
+      return res.status(200).json(infoActualizado);
     } else {
       return res
         .status(404)
@@ -125,10 +138,10 @@ export const updateAdditionalInfo = async (req, res) => {
 
 export const deleteAdditionalInfo = async (req, res) => {
   try {
-    const addInfoEliminado = await AdditionalInfo.destroy({
+    const infoEliminado = await AdditionalInfo.destroy({
       where: { id: req.params.id },
     });
-    if (!addInfoEliminado)
+    if (!infoEliminado)
       return res.status(404).json({ message: "No se encontro" });
     return res.status(200).json({ message: "Informacion eliminada" });
   } catch (error) {

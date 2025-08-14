@@ -3,8 +3,8 @@ import { sequelize } from "../config/database.js";
 import Task from "./task.model.js";
 import TaskType from "./tasktype.model.js";
 
-const Task_TaskType = sequelize.define(
-  "Task_TaskType",
+const TaskTaskType = sequelize.define(
+  "TaskTaskType",
   {
     id: {
       type: DataTypes.INTEGER,
@@ -18,11 +18,11 @@ const Task_TaskType = sequelize.define(
   }
 );
 
-export default Task_TaskType;
+export default TaskTaskType;
 
-Task.belongsToMany(TaskType, { through: Task_TaskType, foreignKey: "task_id" });
+Task.belongsToMany(TaskType, { through: TaskTaskType, foreignKey: "task_id" });
 
 TaskType.belongsToMany(Task, {
-  through: Task_TaskType,
+  through: TaskTaskType,
   foreignKey: "tasktype_id",
 });

@@ -1,6 +1,5 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/database.js";
-import AdditionalInfo from "./additional_info.model.js";
 
 const User = sequelize.define(
   "User",
@@ -15,11 +14,3 @@ const User = sequelize.define(
 );
 
 export default User;
-
-AdditionalInfo.belongsTo(User, {
-  foreignKey: "user_id",
-});
-
-User.hasOne(AdditionalInfo, {
-  foreignKey: "user_id",
-});
