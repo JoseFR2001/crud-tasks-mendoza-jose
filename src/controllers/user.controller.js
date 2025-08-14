@@ -48,7 +48,15 @@ export const createUser = async (req, res) => {
 
 export const getByIdUser = async (req, res) => {
   try {
-    const user = await User.findByPk(req.params.id);
+    const user = await User.findByPk(req.params.id, {
+      attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: Task,
+          attributes: { exclude: ["user_id"] },
+        },
+      ],
+    });
     if (!user) return res.status(404).json({ message: "El usuario no existe" });
     return res.status(200).json(user);
   } catch (error) {
@@ -58,7 +66,15 @@ export const getByIdUser = async (req, res) => {
 
 export const getAllUser = async (req, res) => {
   try {
-    const users = await User.findAll();
+    const users = await User.findAll({
+      attributes: { exclude: ["password"] },
+      include: [
+        {
+          model: Task,
+          attributes: { exclude: ["user_id"] },
+        },
+      ],
+    });
     if (users.length == 0) return res.json({ message: "No existen usuarios" });
     return res.status(200).json(users);
   } catch (error) {
