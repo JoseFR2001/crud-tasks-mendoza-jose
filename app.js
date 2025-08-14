@@ -23,7 +23,12 @@ app.use("/api", routerTaskTaksType);
 initDB().then(() => {
   app.listen(PORT, () => {
     console.log(
-      `Conexión con la base de datos establecida \nhttp://localhost:${PORT}/api/task \nhttp://localhost:${PORT}/api/user`
+      `Conexión con la base de datos establecida 
+      http://localhost:${PORT}/api/task 
+      http://localhost:${PORT}/api/user 
+      http://localhost:${PORT}/api/additionalInfo 
+      http://localhost:${PORT}/api/tasktasktype 
+      http://localhost:${PORT}/api/tasktype`
     );
   });
 });
