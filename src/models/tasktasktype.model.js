@@ -20,6 +20,9 @@ const TaskTaskType = sequelize.define(
 
 export default TaskTaskType;
 
+//De la forma que esta en el material, la tabla cumple con la funcion de relacionar las tablas pero al usar
+// el metodo GET solo me trae el registro con las _id
+
 // Task.belongsToMany(TaskType, { through: TaskTaskType, foreignKey: "task_id" });
 
 // TaskType.belongsToMany(Task, {
@@ -27,7 +30,8 @@ export default TaskTaskType;
 //   foreignKey: "tasktype_id",
 // });
 
-//Metodo chatGPT
+//Metodo que me recomendo chatGPT
+//Uso este metodo porque usar el metodo GET quiero que me traiga los datos de las relaciones
 TaskType.hasMany(TaskTaskType, { foreignKey: "tasktype_id" });
 TaskTaskType.belongsTo(TaskType, { foreignKey: "tasktype_id" });
 

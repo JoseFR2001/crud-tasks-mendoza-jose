@@ -13,7 +13,7 @@ export const createTaskTasktype = async (req, res) => {
     const tarea = await Task.findByPk(task_id);
     if (!tarea) return res.status(400).json({ message: "La tarea no existe" });
 
-    const tipoDeTarea = await Task.findByPk(tasktype_id);
+    const tipoDeTarea = await TaskType.findByPk(tasktype_id);
     if (!tipoDeTarea)
       return res.status(400).json({ message: "El tipo de tarea no existe" });
 

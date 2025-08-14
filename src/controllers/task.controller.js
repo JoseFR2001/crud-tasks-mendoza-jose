@@ -1,7 +1,6 @@
 import Task from "../models/task.model.js";
 import { Op } from "sequelize";
 import User from "../models/user.model.js";
-// import TaskType from "../models/tasktype.model.js";
 import TaskTaskType from "../models/tasktasktype.model.js";
 import TaskType from "../models/tasktype.model.js";
 
