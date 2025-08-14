@@ -47,10 +47,12 @@ export const createAdditionalInfo = async (req, res) => {
 
 export const getAllAdditionalInfo = async (req, res) => {
   try {
-    const getAll = AdditionalInfo.findAll({
+    const getAll = await AdditionalInfo.findAll({
+      attributes: { exclude: ["user_id"] },
       include: [
         {
           model: User,
+          attributes: { exclude: ["password"] },
         },
       ],
     });
@@ -67,9 +69,11 @@ export const getAllAdditionalInfo = async (req, res) => {
 export const getByAIdAdditionalInfo = async (req, res) => {
   try {
     const getById = await AdditionalInfo.findByPk(req.params.id, {
+      attributes: { exclude: ["user_id"] },
       include: [
         {
           model: User,
+          attributes: { exclude: ["password"] },
         },
       ],
     });

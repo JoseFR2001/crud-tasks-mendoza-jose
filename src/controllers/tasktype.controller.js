@@ -26,7 +26,7 @@ export const createTaskType = async (req, res) => {
 
 export const getAllTaskType = async (req, res) => {
   try {
-    const getAll = TaskType.findAll();
+    const getAll = await TaskType.findAll();
     if (getAll.length == 0)
       return res.json({
         message: "No existe type",

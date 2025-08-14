@@ -54,12 +54,11 @@ export const getByIdUser = async (req, res) => {
       include: [
         {
           model: Task,
-          attributes: { exclude: ["user_id"] },
+          attributes: { exclude: ["user_id", "id"] },
         },
-      ],
-      include: [
         {
           model: AdditionalInfo,
+          attributes: { exclude: ["id", "user_id"] },
         },
       ],
     });
@@ -77,12 +76,11 @@ export const getAllUser = async (req, res) => {
       include: [
         {
           model: Task,
-          attributes: { exclude: ["user_id"] },
+          attributes: { exclude: ["user_id", "id"] },
         },
-      ],
-      include: [
         {
           model: AdditionalInfo,
+          attributes: { exclude: ["id", "user_id"] },
         },
       ],
     });

@@ -28,8 +28,8 @@ export const createTaskTasktype = async (req, res) => {
 export const getAllTaskTaskTypes = async (req, res) => {
   try {
     const traerTodo = await TaskTaskType.findAll({
-      // attributes: { exclude: [""] },
-      include: [{ model: Task }, { model: TaskType }], //Proboca un error, no se cual
+      attributes: ["id"],
+      include: [{ model: Task }, { model: TaskType }],
     });
     return res.status(200).json(traerTodo);
   } catch (error) {
@@ -40,6 +40,7 @@ export const getAllTaskTaskTypes = async (req, res) => {
 export const getByIdTaskTasktype = async (req, res) => {
   try {
     const traerById = await TaskTaskType.findByPk(req.params.id, {
+      attributes: ["id"],
       include: [{ model: Task }, { model: TaskType }],
     });
     if (!traerById)

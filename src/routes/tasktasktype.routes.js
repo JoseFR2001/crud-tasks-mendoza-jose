@@ -7,8 +7,8 @@ import {
 
 const routerTaskTaksType = Router();
 
-routerTaskTaksType.post("/typetypetype", createTaskTasktype);
-routerTaskTaksType.get("/typetypetype", getAllTaskTaskTypes);
-routerTaskTaksType.get("/typetypetype/:id", getByIdTaskTasktype);
+routerTaskTaksType.post("/tasktasktype", createTaskTasktype);
+routerTaskTaksType.get("/tasktasktype", getAllTaskTaskTypes);
+routerTaskTaksType.get("/tasktasktype/:id", getByIdTaskTasktype);
 
 export default routerTaskTaksType;

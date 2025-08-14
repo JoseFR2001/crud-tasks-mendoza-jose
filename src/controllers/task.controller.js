@@ -58,13 +58,20 @@ export const createTask = async (req, res) => {
 export const getByIdTask = async (req, res) => {
   try {
     const task = await Task.findByPk(req.params.id, {
+      attributes: {
+        exclude: ["user_id"],
+      },
       include: [
         {
           model: User,
           attributes: { exclude: ["password"] },
         },
+        {
+          model: TaskType,
+          attributes: ["task_type"],
+          through: { attributes: [] },
+        },
       ],
-      include: [{ model: TaskType }],
     });
     if (!task) return res.status(404).json({ message: "La tarea no existe" });
     return res.status(200).json(task);
@@ -79,9 +86,19 @@ export const getAllTask = async (req, res) => {
       attributes: {
         exclude: ["user_id"],
       },
-      include: [{ model: User, attributes: { exclude: ["password"] } }],
-      include: [{ model: TaskType }],
+      include: [
+        {
+          model: User,
+          attributes: { exclude: ["password"] },
+        },
+        {
+          model: TaskType,
+          attributes: ["task_type"],
+          through: { attributes: [] },
+        },
+      ],
     });
+
     if (tasks.length == 0) return res.json({ message: "No existen tareas" });
     return res.status(200).json(tasks);
   } catch (error) {
