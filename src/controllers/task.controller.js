@@ -5,7 +5,7 @@ import TaskType from "../models/tasktype.model.js";
 
 export const createTask = async (req, res) => {
   try {
-    const { title, description, isComplete, user_id } = req.body;
+    const { title, description, is_complete, user_id } = req.body;
 
     if (
       title === "" ||
@@ -17,7 +17,7 @@ export const createTask = async (req, res) => {
         message: "Los campos de title y description no deben estar vacios",
       });
 
-    if (!user_id)
+    if (!user_id || !Number(user_id))
       return res
         .status(400)
         .json({ message: "Se le debe asignar un usuario a la tarea" });
@@ -43,10 +43,10 @@ export const createTask = async (req, res) => {
     if (tareaExiste)
       return res.status(400).json({ message: "La tarea ya existe" });
 
-    if (typeof isComplete !== "boolean")
+    if (typeof is_complete !== "boolean")
       return res
         .status(400)
-        .json({ message: "isComplete debe ser un booleano" });
+        .json({ message: "is_complete debe ser un booleano" });
 
     const crearTarea = await Task.create(req.body);
     return res.status(201).json(crearTarea);
@@ -91,7 +91,7 @@ export const getAllTask = async (req, res) => {
 
 export const updateTask = async (req, res) => {
   try {
-    const { title, description, isComplete } = req.body;
+    const { title, description, is_complete, user_id } = req.body;
 
     if (
       title === "" ||
@@ -105,16 +105,28 @@ export const updateTask = async (req, res) => {
         message: "Los campos de title y description no deben estar vacios",
       });
 
+    if (!user_id || !Number(user_id))
+      return res
+        .status(400)
+        .json({ message: "Se le debe asignar un usuario a la tarea" });
+
+    const usuario = await User.findByPk(user_id);
+    if (!usuario) {
+      return res.status(404).json({
+        message: "El usuario no existe",
+      });
+    }
+
     const tareaExiste = await Task.findOne({
       where: { title: title, id: { [Op.ne]: req.params.id } },
     });
     if (tareaExiste)
       return res.status(400).json({ message: "La tarea ya existe" });
 
-    if (typeof isComplete !== "boolean")
+    if (typeof is_complete !== "boolean")
       return res
         .status(400)
-        .json({ message: "isComplete debe ser un booleano" });
+        .json({ message: "is_complete debe ser un booleano" });
     const [update] = await Task.update(req.body, {
       where: { id: req.params.id },
     });

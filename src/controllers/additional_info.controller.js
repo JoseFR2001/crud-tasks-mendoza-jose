@@ -10,7 +10,7 @@ export const createAdditionalInfo = async (req, res) => {
         .status(400)
         .json({ message: "Los campos no deben ser vacios " });
 
-    if (!user_id || !NUMBER(user_id))
+    if (!user_id || !Number(user_id))
       return res
         .status(400)
         .json({ message: "Se le debe asignar un usuario a la tarea" });
@@ -91,7 +91,7 @@ export const updateAdditionalInfo = async (req, res) => {
         .status(400)
         .json({ message: "Los campos no deben ser vacios " });
 
-    if (!user_id)
+    if (!user_id || !Number(user_id))
       return res
         .status(400)
         .json({ message: "Se le debe asignar un usuario a la tarea" });
