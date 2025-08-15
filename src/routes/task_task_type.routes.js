@@ -3,7 +3,7 @@ import {
   createTaskTasktype,
   getAllTaskTaskTypes,
   getByIdTaskTasktype,
-} from "../controllers/tasktasktype.controller.js";
+} from "../controllers/task_task_type.controller.js";
 
 const routerTaskTaksType = Router();
 

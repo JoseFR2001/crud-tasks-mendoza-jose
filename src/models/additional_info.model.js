@@ -3,7 +3,7 @@ import { sequelize } from "../config/database.js";
 import User from "./user.model.js";
 
 const AdditionalInfo = sequelize.define(
-  "AdditionalInfo",
+  "additional_info",
   {
     phone_number: {
       type: DataTypes.STRING(20),

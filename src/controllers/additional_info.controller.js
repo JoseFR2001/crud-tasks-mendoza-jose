@@ -8,12 +8,12 @@ export const createAdditionalInfo = async (req, res) => {
     if (!phone_number || !address)
       return res
         .status(400)
-        .json({ message: "Los campos no deben ser vacios " });
+        .json({ message: "Los campos no deben estar vacíos" });
 
-    if (!user_id || !Number(user_id))
+    if (!user_id || !Number.isInteger(user_id))
       return res
         .status(400)
-        .json({ message: "Se le debe asignar un usuario a la tarea" });
+        .json({ message: "Es necesario asignar un usuario a la tarea" });
 
     const usuario = await User.findByPk(user_id);
     if (!usuario) {
@@ -23,7 +23,7 @@ export const createAdditionalInfo = async (req, res) => {
     }
     if (phone_number.length > 20)
       return res.status(400).json({
-        message: "El numero de telefono no debe tener mas de 20 caracteres",
+        message: "El número de teléfono no debe tener más de 20 caracteres",
       });
 
     const telefonoUnico = await AdditionalInfo.findOne({
@@ -32,11 +32,11 @@ export const createAdditionalInfo = async (req, res) => {
     if (telefonoUnico)
       return res
         .status(400)
-        .json({ message: "Ya existe ese numero de telefono" });
+        .json({ message: "Ya existe ese número de teléfono" });
     if (address.length > 100)
       return res
         .status(400)
-        .json({ message: "La direccion debe tener mas de 100 caracteres" });
+        .json({ message: "La dirección no debe tener más de 100 caracteres" });
 
     const info = await AdditionalInfo.create(req.body);
     return res.status(201).json(info);
@@ -80,12 +80,14 @@ export const getByAIdAdditionalInfo = async (req, res) => {
     if (!getById)
       return res
         .status(404)
-        .json({ message: "Informacion adicional no existe" });
+        .json({ message: "La información adicional no existe" });
     return res.status(200).json(getById);
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 };
+
+//Las siguientes rutas no son necesarias; las creé porque no me di cuenta de que solo se requieren los métodos POST y GET
 
 export const updateAdditionalInfo = async (req, res) => {
   try {
@@ -93,12 +95,12 @@ export const updateAdditionalInfo = async (req, res) => {
     if (!phone_number || !address)
       return res
         .status(400)
-        .json({ message: "Los campos no deben ser vacios " });
+        .json({ message: "Los campos no deben estar vacíos" });
 
-    if (!user_id || !Number(user_id))
+    if (!user_id || !Number.isInteger(user_id))
       return res
         .status(400)
-        .json({ message: "Se le debe asignar un usuario a la tarea" });
+        .json({ message: "Es necesario asignar un usuario a la tarea" });
 
     const usuario = await User.findByPk(user_id);
     if (!usuario) {
@@ -109,7 +111,7 @@ export const updateAdditionalInfo = async (req, res) => {
 
     if (phone_number.length > 20)
       return res.status(400).json({
-        message: "El numero de telefono no debe tener mas de 20 caracteres",
+        message: "El número de teléfono no debe tener más de 20 caracteres",
       });
 
     const telefonoUnico = await AdditionalInfo.findOne({
@@ -118,11 +120,11 @@ export const updateAdditionalInfo = async (req, res) => {
     if (telefonoUnico)
       return res
         .status(400)
-        .json({ message: "Ya existe ese numero de telefono" });
+        .json({ message: "Ya existe ese número de teléfono" });
     if (address.length > 100)
       return res
         .status(400)
-        .json({ message: "La direccion debe tener mas de 100 caracteres" });
+        .json({ message: "La dirección no debe tener más de 100 caracteres" });
 
     const [update] = await AdditionalInfo.update(req.body, {
       where: { id: req.params.id },
@@ -133,7 +135,7 @@ export const updateAdditionalInfo = async (req, res) => {
     } else {
       return res
         .status(404)
-        .json({ message: "No existe informacion adicional" });
+        .json({ message: "No existe información adicional" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -147,7 +149,7 @@ export const deleteAdditionalInfo = async (req, res) => {
     });
     if (!infoEliminado)
       return res.status(404).json({ message: "No se encontro" });
-    return res.status(200).json({ message: "Informacion eliminada" });
+    return res.status(200).json({ message: "Información eliminada" });
   } catch (error) {
     res.status(500).json({ error: error.message });
   }

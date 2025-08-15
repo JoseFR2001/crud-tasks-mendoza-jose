@@ -3,7 +3,7 @@ import { sequelize } from "../config/database.js";
 import User from "./user.model.js";
 
 const Task = sequelize.define(
-  "Task",
+  "task",
   {
     title: { type: DataTypes.STRING(100), unique: true, allowNull: false },
     description: { type: DataTypes.STRING(100), allowNull: false },

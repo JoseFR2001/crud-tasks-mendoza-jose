@@ -1,8 +1,8 @@
 import Task from "../models/task.model.js";
 import { Op } from "sequelize";
 import User from "../models/user.model.js";
-import TaskTaskType from "../models/tasktasktype.model.js";
-import TaskType from "../models/tasktype.model.js";
+import TaskTaskType from "../models/task_task_type.model.js";
+import TaskType from "../models/task_type.model.js";
 
 export const createTask = async (req, res) => {
   try {

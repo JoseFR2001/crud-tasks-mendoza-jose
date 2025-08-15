@@ -3,9 +3,9 @@ import dotenv from "dotenv";
 import { initDB } from "./src/config/database.js";
 import routerTask from "./src/routes/task.routes.js";
 import routerUser from "./src/routes/user.routes.js";
-import routerAdditionalInfo from "./src/routes/additionalInfo.routes.js";
-import routerTaskType from "./src/routes/tasktype.routes.js";
-import routerTaskTaksType from "./src/routes/tasktasktype.routes.js";
+import routerAdditionalInfo from "./src/routes/additional_info.routes.js";
+import routerTaskType from "./src/routes/task_type.routes.js";
+import routerTaskTaksType from "./src/routes/task_task_type.routes.js";
 
 dotenv.config();
 
@@ -23,7 +23,7 @@ app.use("/api", routerTaskTaksType);
 initDB().then(() => {
   app.listen(PORT, () => {
     console.log(
-      `Conexión con la base de datos establecida 
+      `Conexión con la base de datos establecida en
       http://localhost:${PORT}/api/task 
       http://localhost:${PORT}/api/user 
       http://localhost:${PORT}/api/additionalInfo 

@@ -5,7 +5,7 @@ import {
   getAllTaskType,
   getByAIdTaskType,
   updateTaskType,
-} from "../controllers/tasktype.controller.js";
+} from "../controllers/task_type.controller.js";
 
 const routerTaskType = Router();
 
