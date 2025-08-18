@@ -1,7 +1,6 @@
 import Task from "../models/task.model.js";
 import { Op } from "sequelize";
 import User from "../models/user.model.js";
-import TaskTaskType from "../models/task_task_type.model.js";
 import TaskType from "../models/task_type.model.js";
 
 export const createTask = async (req, res) => {
@@ -68,9 +67,9 @@ export const getByIdTask = async (req, res) => {
           attributes: { exclude: ["password"] },
         },
         {
-          model: TaskTaskType,
-          attributes: ["id"],
-          include: [{ model: TaskType, attributes: ["task_type"] }],
+          model: TaskType,
+          attributes: ["task_type"],
+          through: { attributes: [] },
         },
       ],
     });
@@ -93,9 +92,9 @@ export const getAllTask = async (req, res) => {
           attributes: { exclude: ["password"] },
         },
         {
-          model: TaskTaskType,
-          attributes: ["id"],
-          include: [{ model: TaskType, attributes: ["task_type"] }],
+          model: TaskType,
+          attributes: ["task_type"],
+          through: { attributes: [] },
         },
       ],
     });

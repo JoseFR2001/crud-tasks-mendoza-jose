@@ -32,11 +32,7 @@ export const createTaskTasktype = async (req, res) => {
 
 export const getAllTaskTaskTypes = async (req, res) => {
   try {
-    const traerTodo = await TaskTaskType.findAll({
-      //En está parte es que si se usa la forma que está en el material, debe ser sólo findAll().
-      attributes: ["id"],
-      include: [{ model: Task }, { model: TaskType }],
-    });
+    const traerTodo = await TaskTaskType.findAll();
     if (traerTodo.length == 0)
       return res.json({
         message: "No existen relaciones",
@@ -49,14 +45,7 @@ export const getAllTaskTaskTypes = async (req, res) => {
 
 export const getByIdTaskTasktype = async (req, res) => {
   try {
-    const traerById = await TaskTaskType.findByPk(
-      req.params.id,
-      //Lo mismo acá, sólo debe incluirse el findByPk(req.params.id)
-      {
-        attributes: ["id"],
-        include: [{ model: Task }, { model: TaskType }],
-      }
-    );
+    const traerById = await TaskTaskType.findByPk();
     if (!traerById)
       return res.status(404).json({ message: "Relación no encontrada" });
     return res.status(200).json(traerById);
