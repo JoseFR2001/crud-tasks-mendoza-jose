@@ -21,8 +21,10 @@ export default AdditionalInfo;
 
 AdditionalInfo.belongsTo(User, {
   foreignKey: "user_id",
+  as: "user",
 });
 
 User.hasOne(AdditionalInfo, {
   foreignKey: "user_id",
+  as: "additional_info",
 });

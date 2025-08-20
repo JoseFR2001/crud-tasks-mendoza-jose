@@ -21,6 +21,16 @@ export const createAdditionalInfo = async (req, res) => {
         message: "El usuario no existe",
       });
     }
+
+    const usuarioExistente = await AdditionalInfo.findOne({
+      where: { user_id: user_id },
+    });
+
+    if (usuarioExistente)
+      return res.status(400).json({
+        message: "La información adicional ya pertenece a un usuario",
+      });
+
     if (phone_number.length > 20)
       return res.status(400).json({
         message: "El número de teléfono no debe tener más de 20 caracteres",
@@ -52,6 +62,7 @@ export const getAllAdditionalInfo = async (req, res) => {
       include: [
         {
           model: User,
+          as: "user",
           attributes: { exclude: ["password"] },
         },
       ],
@@ -73,6 +84,7 @@ export const getByAIdAdditionalInfo = async (req, res) => {
       include: [
         {
           model: User,
+          as: "user",
           attributes: { exclude: ["password"] },
         },
       ],
@@ -108,6 +120,15 @@ export const updateAdditionalInfo = async (req, res) => {
         message: "El usuario no existe",
       });
     }
+
+    const usuarioExistente = await AdditionalInfo.findOne({
+      where: { user_id: user_id },
+    });
+
+    if (usuarioExistente)
+      return res.status(400).json({
+        message: "La información adicional ya pertenece a un usuario",
+      });
 
     if (phone_number.length > 20)
       return res.status(400).json({

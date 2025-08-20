@@ -20,9 +20,22 @@ const TaskTaskType = sequelize.define(
 
 export default TaskTaskType;
 
-Task.belongsToMany(TaskType, { through: TaskTaskType, foreignKey: "task_id" });
+TaskTaskType.belongsTo(Task, {
+  foreignKey: "task_id",
+  as: "task",
+});
 
-TaskType.belongsToMany(Task, {
-  through: TaskTaskType,
-  foreignKey: "tasktype_id",
+TaskTaskType.belongsTo(TaskType, {
+  foreignKey: "task_type_id",
+  as: "task_type",
+});
+
+Task.hasMany(TaskTaskType, {
+  foreignKey: "task_id",
+  as: "task_task_type",
+});
+
+TaskType.hasMany(TaskTaskType, {
+  foreignKey: "task_type_id",
+  as: "task_task_type",
 });

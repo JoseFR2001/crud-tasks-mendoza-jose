@@ -2,6 +2,7 @@ import Task from "../models/task.model.js";
 import { Op } from "sequelize";
 import User from "../models/user.model.js";
 import TaskType from "../models/task_type.model.js";
+import TaskTaskType from "../models/task_task_type.model.js";
 
 export const createTask = async (req, res) => {
   try {
@@ -17,7 +18,7 @@ export const createTask = async (req, res) => {
         message: "Los campos de title y description no deben estar vacios",
       });
 
-    if (!user_id || !Number(user_id))
+    if (!user_id || !Number.isInteger(user_id))
       return res
         .status(400)
         .json({ message: "Se le debe asignar un usuario a la tarea" });
@@ -64,12 +65,16 @@ export const getByIdTask = async (req, res) => {
       include: [
         {
           model: User,
+          as: "user",
           attributes: { exclude: ["password"] },
         },
         {
-          model: TaskType,
-          attributes: ["task_type"],
-          through: { attributes: [] },
+          model: TaskTaskType,
+          as: "task_task_type",
+          attributes: ["task_id"],
+          include: [
+            { model: TaskType, as: "task_type", attributes: ["task_type"] },
+          ],
         },
       ],
     });
@@ -89,12 +94,16 @@ export const getAllTask = async (req, res) => {
       include: [
         {
           model: User,
+          as: "user",
           attributes: { exclude: ["password"] },
         },
         {
-          model: TaskType,
-          attributes: ["task_type"],
-          through: { attributes: [] },
+          model: TaskTaskType,
+          as: "task_task_type",
+          attributes: ["task_id"],
+          include: [
+            { model: TaskType, as: "task_type", attributes: ["task_type"] },
+          ],
         },
       ],
     });
