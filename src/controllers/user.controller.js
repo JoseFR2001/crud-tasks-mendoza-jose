@@ -4,8 +4,8 @@ import User from "../models/user.model.js";
 import { Op } from "sequelize";
 
 export const createUser = async (req, res) => {
+  const { name, email, password } = req.body;
   try {
-    const { name, email, password } = req.body;
     if (
       name === "" ||
       name === undefined ||
@@ -96,8 +96,8 @@ export const getAllUser = async (req, res) => {
 };
 
 export const updateUser = async (req, res) => {
+  const { name, email, password } = req.body;
   try {
-    const { name, email, password } = req.body;
     if (
       name === "" ||
       name === undefined ||

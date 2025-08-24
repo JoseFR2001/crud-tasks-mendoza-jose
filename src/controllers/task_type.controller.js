@@ -2,8 +2,8 @@ import { Op } from "sequelize";
 import TaskType from "../models/task_type.model.js";
 
 export const createTaskType = async (req, res) => {
+  const { task_type } = req.body;
   try {
-    const { task_type } = req.body;
     if (!task_type)
       return res
         .status(400)
@@ -50,11 +50,10 @@ export const getByAIdTaskType = async (req, res) => {
   }
 };
 
-//Las siguientes rutas no son necesarias; las creé porque no me di cuenta de que solo se requieren los métodos POST y GET
-
 export const updateTaskType = async (req, res) => {
+  const { task_type } = req.body;
+
   try {
-    const { task_type } = req.body;
     if (!task_type)
       return res
         .status(400)

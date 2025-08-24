@@ -9,7 +9,7 @@ const User = sequelize.define(
     password: { type: DataTypes.STRING(100), allowNull: false },
   },
   {
-    timestamps: false,
+    paranoid: true,
   }
 );
 

@@ -13,7 +13,7 @@ const AdditionalInfo = sequelize.define(
     address: { type: DataTypes.STRING(100), allowNull: false },
   },
   {
-    timestamps: false,
+    paranoid: true,
   }
 );
 
@@ -22,9 +22,11 @@ export default AdditionalInfo;
 AdditionalInfo.belongsTo(User, {
   foreignKey: "user_id",
   as: "user",
+  onDelete: "CASCADE",
 });
 
 User.hasOne(AdditionalInfo, {
   foreignKey: "user_id",
   as: "additional_info",
+  onDelete: "CASCADE",
 });

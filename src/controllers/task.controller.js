@@ -5,9 +5,8 @@ import TaskType from "../models/task_type.model.js";
 import TaskTaskType from "../models/task_task_type.model.js";
 
 export const createTask = async (req, res) => {
+  const { title, description, is_complete, user_id } = req.body;
   try {
-    const { title, description, is_complete, user_id } = req.body;
-
     if (
       title === "" ||
       title === undefined ||
@@ -116,9 +115,8 @@ export const getAllTask = async (req, res) => {
 };
 
 export const updateTask = async (req, res) => {
+  const { title, description, is_complete, user_id } = req.body;
   try {
-    const { title, description, is_complete, user_id } = req.body;
-
     if (
       title === "" ||
       title === undefined ||

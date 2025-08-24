@@ -3,8 +3,8 @@ import AdditionalInfo from "../models/additional_info.model.js";
 import User from "../models/user.model.js";
 
 export const createAdditionalInfo = async (req, res) => {
+  const { phone_number, address, user_id } = req.body;
   try {
-    const { phone_number, address, user_id } = req.body;
     if (!phone_number || !address)
       return res
         .status(400)
@@ -99,11 +99,9 @@ export const getByAIdAdditionalInfo = async (req, res) => {
   }
 };
 
-//Las siguientes rutas no son necesarias; las creé porque no me di cuenta de que solo se requieren los métodos POST y GET
-
 export const updateAdditionalInfo = async (req, res) => {
+  const { phone_number, address, user_id } = req.body;
   try {
-    const { phone_number, address, user_id } = req.body;
     if (!phone_number || !address)
       return res
         .status(400)
