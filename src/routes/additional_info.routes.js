@@ -6,13 +6,40 @@ import {
   getByAIdAdditionalInfo,
   updateAdditionalInfo,
 } from "../controllers/additional_info.controller.js";
+import {
+  createAddInfoValidations,
+  deleteAddInfValidations,
+  getByPkAddInfoValidations,
+  updteAddInfValidations,
+} from "../middlewares/validations/additional_info.validations.js";
+import controller from "../middlewares/validator.js";
 
 const routerAdditionalInfo = Router();
 
-routerAdditionalInfo.post("/additionalInfo", createAdditionalInfo),
+routerAdditionalInfo.post(
+  "/additionalInfo",
+  createAddInfoValidations,
+  controller,
+  createAdditionalInfo
+),
   routerAdditionalInfo.get("/additionalInfo", getAllAdditionalInfo),
-  routerAdditionalInfo.get("/additionalInfo/:id", getByAIdAdditionalInfo),
-  routerAdditionalInfo.put("/additionalInfo/:id", updateAdditionalInfo),
-  routerAdditionalInfo.delete("/additionalInfo/:id", deleteAdditionalInfo);
+  routerAdditionalInfo.get(
+    "/additionalInfo/:id",
+    getByPkAddInfoValidations,
+    controller,
+    getByAIdAdditionalInfo
+  ),
+  routerAdditionalInfo.put(
+    "/additionalInfo/:id",
+    updteAddInfValidations,
+    controller,
+    updateAdditionalInfo
+  ),
+  routerAdditionalInfo.delete(
+    "/additionalInfo/:id",
+    deleteAddInfValidations,
+    controller,
+    deleteAdditionalInfo
+  );
 
 export default routerAdditionalInfo;
