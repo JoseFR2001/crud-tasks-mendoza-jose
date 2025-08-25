@@ -43,7 +43,7 @@ export const createUserValidations = [
 export const getByPkUserValidations = [
   param("id")
     .isInt({ min: 1 })
-    .withMessage("El id debe ser un número entero")
+    .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
       try {
         const usuario = await User.findByPk(id);
@@ -59,7 +59,7 @@ export const getByPkUserValidations = [
 export const updateUserValidations = [
   param("id")
     .isInt({ min: 1 })
-    .withMessage("El id debe ser un número entero")
+    .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
       try {
         const usuario = await User.findByPk(id);
@@ -115,7 +115,7 @@ export const updateUserValidations = [
 export const deleteUserValidations = [
   param("id")
     .isInt({ min: 1 })
-    .withMessage("El id debe ser un número entero")
+    .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
       try {
         const usuario = await User.findByPk(id);

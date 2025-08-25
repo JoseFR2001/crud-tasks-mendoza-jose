@@ -41,8 +41,8 @@ export const createTaskValidations = [
     .trim()
     .notEmpty()
     .withMessage("Debe existir un usuario")
-    .isInt()
-    .withMessage("El user_id debe ser un entero")
+    .isInt({ min: 1 })
+    .withMessage("El user_id debe ser un entero positivo")
     .custom(async (user_id) => {
       try {
         const user = await User.findByPk(user_id);
@@ -57,8 +57,8 @@ export const createTaskValidations = [
 
 export const getByPkTaskValidations = [
   param("id")
-    .isInt()
-    .withMessage("El id debe ser un número entero")
+    .isInt({ min: 1 })
+    .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
       try {
         const task = await Task.findByPk(id);
@@ -73,8 +73,8 @@ export const getByPkTaskValidations = [
 
 export const updateTaskValidations = [
   param("id")
-    .isInt()
-    .withMessage("El id debe ser un número entero")
+    .isInt({ min: 1 })
+    .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
       try {
         const task = await Task.findByPk(id);
@@ -127,8 +127,8 @@ export const updateTaskValidations = [
     .trim()
     .notEmpty()
     .withMessage("Debe existir un usuario")
-    .isInt()
-    .withMessage("El user_id debe ser un entero")
+    .isInt({ min: 1 })
+    .withMessage("El user_id debe ser un entero positivo")
     .custom(async (user_id) => {
       try {
         const user = await User.findByPk(user_id);
@@ -143,8 +143,8 @@ export const updateTaskValidations = [
 
 export const deleteTaskValidations = [
   param("id")
-    .isInt()
-    .withMessage("El id debe ser un número entero")
+    .isInt({ min: 1 })
+    .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
       try {
         const task = await Task.findByPk(id);
