@@ -21,9 +21,11 @@ export const createUserValidations = [
     .custom(async (email) => {
       try {
         const emailExiste = await User.findOne({ where: { email } });
-        if (emailExiste) throw new Error("Email ya pertenece a otro usuario");
+        if (emailExiste) {
+          return Promise.reject("El email pertenece a otro usuario");
+        }
       } catch (error) {
-        throw new Error("Error checking email availability");
+        return Promise.reject("Error checking email availability");
       }
     }),
   body("password")
@@ -45,14 +47,29 @@ export const getByPkUserValidations = [
     .custom(async (id) => {
       try {
         const usuario = await User.findByPk(id);
-        if (!usuario) throw new Error("El usuario no existe");
+        if (!usuario) {
+          return Promise.reject("El usuario no existe");
+        }
       } catch (error) {
-        throw new Error("Error checking email availability");
+        return Promise.reject("Error checking user availability");
       }
     }),
 ];
 
 export const updateUserValidations = [
+  param("id")
+    .isInt({ min: 1 })
+    .withMessage("El id debe ser un número entero")
+    .custom(async (id) => {
+      try {
+        const usuario = await User.findByPk(id);
+        if (!usuario) {
+          return Promise.reject("El usuario no existe");
+        }
+      } catch (error) {
+        return Promise.reject("Error checking user availability");
+      }
+    }),
   body("name")
     .optional()
     .trim()
@@ -74,11 +91,14 @@ export const updateUserValidations = [
     .custom(async (email) => {
       try {
         const emailExiste = await User.findOne({ where: { email } });
-        if (emailExiste) throw new Error("Email ya pertenece a otro usuario");
+        if (emailExiste) {
+          return Promise.reject("El email pertenece a otro usuario");
+        }
       } catch (error) {
-        throw new Error("Error checking email availability");
+        return Promise.reject("Error checking email availability");
       }
     }),
+  ,
   body("password")
     .optional()
     .trim()
@@ -90,17 +110,6 @@ export const updateUserValidations = [
     .withMessage(
       "La contraseña debe tener un minimo 8 caracteres y un maximo 100"
     ),
-  param("id")
-    .isInt({ min: 1 })
-    .withMessage("El id debe ser un número entero")
-    .custom(async (id) => {
-      try {
-        const usuario = await User.findByPk(id);
-        if (!usuario) throw new Error("El usuario no existe");
-      } catch (error) {
-        throw new Error("Error checking email availability");
-      }
-    }),
 ];
 
 export const deleteUserValidations = [
@@ -110,9 +119,11 @@ export const deleteUserValidations = [
     .custom(async (id) => {
       try {
         const usuario = await User.findByPk(id);
-        if (!usuario) throw new Error("El usuario no existe");
+        if (!usuario) {
+          return Promise.reject("El usuario no existe");
+        }
       } catch (error) {
-        throw new Error("Error checking email availability");
+        return Promise.reject("Error checking user availability");
       }
     }),
 ];
