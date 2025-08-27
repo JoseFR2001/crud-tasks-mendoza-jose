@@ -1,53 +1,9 @@
-import { Op } from "sequelize";
+import { matchedData } from "express-validator";
 import AdditionalInfo from "../models/additional_info.model.js";
 import User from "../models/user.model.js";
 
 export const createAdditionalInfo = async (req, res) => {
-  const { phone_number, address, user_id } = req.body;
   try {
-    if (!phone_number || !address)
-      return res
-        .status(400)
-        .json({ message: "Los campos no deben estar vacíos" });
-
-    if (!user_id || !Number.isInteger(user_id))
-      return res
-        .status(400)
-        .json({ message: "Es necesario asignar un usuario a la tarea" });
-
-    const usuario = await User.findByPk(user_id);
-    if (!usuario) {
-      return res.status(404).json({
-        message: "El usuario no existe",
-      });
-    }
-
-    const usuarioExistente = await AdditionalInfo.findOne({
-      where: { user_id: user_id },
-    });
-
-    if (usuarioExistente)
-      return res.status(400).json({
-        message: "La información adicional ya pertenece a un usuario",
-      });
-
-    if (phone_number.length > 20)
-      return res.status(400).json({
-        message: "El número de teléfono no debe tener más de 20 caracteres",
-      });
-
-    const telefonoUnico = await AdditionalInfo.findOne({
-      where: { phone_number: phone_number },
-    });
-    if (telefonoUnico)
-      return res
-        .status(400)
-        .json({ message: "Ya existe ese número de teléfono" });
-    if (address.length > 100)
-      return res
-        .status(400)
-        .json({ message: "La dirección no debe tener más de 100 caracteres" });
-
     const info = await AdditionalInfo.create(req.body);
     return res.status(201).json(info);
   } catch (error) {
@@ -100,61 +56,24 @@ export const getByAIdAdditionalInfo = async (req, res) => {
 };
 
 export const updateAdditionalInfo = async (req, res) => {
-  const { phone_number, address, user_id } = req.body;
   try {
-    if (!phone_number || !address)
-      return res
-        .status(400)
-        .json({ message: "Los campos no deben estar vacíos" });
+    const data = matchedData(req, { locations: ["body"] });
 
-    if (!user_id || !Number.isInteger(user_id))
+    if (Object.keys(data).length === 0) {
       return res
-        .status(400)
-        .json({ message: "Es necesario asignar un usuario a la tarea" });
-
-    const usuario = await User.findByPk(user_id);
-    if (!usuario) {
-      return res.status(404).json({
-        message: "El usuario no existe",
-      });
+        .status(404)
+        .json({ message: "La data tiene que ser correcta" });
     }
-
-    const usuarioExistente = await AdditionalInfo.findOne({
-      where: { user_id: user_id },
-    });
-
-    if (usuarioExistente)
-      return res.status(400).json({
-        message: "La información adicional ya pertenece a un usuario",
-      });
-
-    if (phone_number.length > 20)
-      return res.status(400).json({
-        message: "El número de teléfono no debe tener más de 20 caracteres",
-      });
-
-    const telefonoUnico = await AdditionalInfo.findOne({
-      where: { phone_number: phone_number, id: { [Op.ne]: req.params.id } },
-    });
-    if (telefonoUnico)
-      return res
-        .status(400)
-        .json({ message: "Ya existe ese número de teléfono" });
-    if (address.length > 100)
-      return res
-        .status(400)
-        .json({ message: "La dirección no debe tener más de 100 caracteres" });
-
-    const [update] = await AdditionalInfo.update(req.body, {
+    const [update] = await AdditionalInfo.update(data, {
       where: { id: req.params.id },
     });
-    if (update) {
-      const infoActualizado = await AdditionalInfo.findByPk(req.params.id);
-      return res.status(200).json(infoActualizado);
-    } else {
+    if (update === 0) {
       return res
         .status(404)
         .json({ message: "No existe información adicional" });
+    } else {
+      const infoActualizado = await AdditionalInfo.findByPk(req.params.id);
+      return res.status(200).json(infoActualizado);
     }
   } catch (error) {
     res.status(500).json({ error: error.message });

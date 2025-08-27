@@ -1,5 +1,6 @@
 import { body, param } from "express-validator";
 import User from "../../models/user.model.js";
+import { Op } from "sequelize";
 
 export const createUserValidations = [
   body("name")
@@ -9,7 +10,8 @@ export const createUserValidations = [
     .isString()
     .withMessage("El nombre debe ser una cadena de caracteres")
     .isLength({ min: 3, max: 100 })
-    .withMessage("El nombre debe tener un minimo 3 caracteres y un maximo 100"),
+    .withMessage("El nombre debe tener un minimo 3 caracteres y un maximo 100")
+    .escape(),
   body("email")
     .trim()
     .notEmpty()
@@ -19,15 +21,12 @@ export const createUserValidations = [
     .isLength({ min: 10, max: 100 })
     .withMessage("El email debe tener un minimo 10 caracteres y un maximo 100")
     .custom(async (email) => {
-      try {
-        const emailExiste = await User.findOne({ where: { email } });
-        if (emailExiste) {
-          return Promise.reject("El email pertenece a otro usuario");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking email availability");
+      const emailExiste = await User.findOne({ where: { email } });
+      if (emailExiste) {
+        throw new Error("El email pertenece a otro usuario");
       }
-    }),
+    })
+    .escape(),
   body("password")
     .trim()
     .notEmpty()
@@ -37,7 +36,8 @@ export const createUserValidations = [
     .isLength({ min: 8, max: 100 })
     .withMessage(
       "La contraseña debe tener un minimo 8 caracteres y un maximo 100"
-    ),
+    )
+    .escape(),
 ];
 
 export const getByPkUserValidations = [
@@ -45,13 +45,9 @@ export const getByPkUserValidations = [
     .isInt({ min: 1 })
     .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
-      try {
-        const usuario = await User.findByPk(id);
-        if (!usuario) {
-          return Promise.reject("El usuario no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking user availability");
+      const userExiste = await User.findByPk(id);
+      if (!userExiste) {
+        throw new Error("El usuario no existe");
       }
     }),
 ];
@@ -61,13 +57,9 @@ export const updateUserValidations = [
     .isInt({ min: 1 })
     .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
-      try {
-        const usuario = await User.findByPk(id);
-        if (!usuario) {
-          return Promise.reject("El usuario no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking user availability");
+      const userExiste = await User.findByPk(id);
+      if (!userExiste) {
+        throw new Error("El usuario no existe");
       }
     }),
   body("name")
@@ -78,7 +70,8 @@ export const updateUserValidations = [
     .isString()
     .withMessage("El nombre debe ser una cadena de caracteres")
     .isLength({ min: 3, max: 100 })
-    .withMessage("El nombre debe tener un minimo 3 caracteres y un maximo 100"),
+    .withMessage("El nombre debe tener un minimo 3 caracteres y un maximo 100")
+    .escape(),
   body("email")
     .optional()
     .trim()
@@ -88,17 +81,15 @@ export const updateUserValidations = [
     .withMessage("Tiene que ser email valido")
     .isLength({ min: 10, max: 100 })
     .withMessage("El email debe tener un minimo 10 caracteres y un maximo 100")
-    .custom(async (email) => {
-      try {
-        const emailExiste = await User.findOne({ where: { email } });
-        if (emailExiste) {
-          return Promise.reject("El email pertenece a otro usuario");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking email availability");
+    .custom(async (email, { req }) => {
+      const emailExiste = await User.findOne({
+        where: { email, id: { [Op.ne]: req.params.id } },
+      });
+      if (emailExiste) {
+        throw new Error("El email pertenece a otro usuario");
       }
-    }),
-  ,
+    })
+    .escape(),
   body("password")
     .optional()
     .trim()
@@ -109,7 +100,8 @@ export const updateUserValidations = [
     .isLength({ min: 8, max: 100 })
     .withMessage(
       "La contraseña debe tener un minimo 8 caracteres y un maximo 100"
-    ),
+    )
+    .escape(),
 ];
 
 export const deleteUserValidations = [
@@ -117,13 +109,9 @@ export const deleteUserValidations = [
     .isInt({ min: 1 })
     .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
-      try {
-        const usuario = await User.findByPk(id);
-        if (!usuario) {
-          return Promise.reject("El usuario no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking user availability");
+      const userExiste = await User.findByPk(id);
+      if (!userExiste) {
+        throw new Error("El usuario no existe");
       }
     }),
 ];

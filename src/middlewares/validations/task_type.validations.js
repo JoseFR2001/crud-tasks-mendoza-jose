@@ -1,5 +1,6 @@
 import { body, param } from "express-validator";
 import TaskType from "../../models/task_type.model.js";
+import { Op } from "sequelize";
 
 export const createTaskTypevalidations = [
   body("task_type")
@@ -11,15 +12,14 @@ export const createTaskTypevalidations = [
     .isLength({ min: 1, max: 100 })
     .withMessage("El maximo de caracteres es de 100")
     .custom(async (task_type) => {
-      try {
-        const taskTypeExiste = await TaskType.findOne({ where: { task_type } });
-        if (taskTypeExiste) {
-          return Promise.reject("El tipo de tarea ya existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking task type availability");
+      const taskTypeExiste = await TaskType.findOne({
+        where: { task_type },
+      });
+      if (taskTypeExiste) {
+        throw new Error("Este tipo de tarea ya existe");
       }
-    }),
+    })
+    .escape(),
 ];
 
 export const getByPkTaskTypeValidations = [
@@ -27,18 +27,23 @@ export const getByPkTaskTypeValidations = [
     .isInt({ min: 1 })
     .withMessage("El id debe ser un entero positivo")
     .custom(async (id) => {
-      try {
-        const taskType = await TaskType.findByPk(id);
-        if (!taskType) {
-          return Promise.reject("El tipo de tarea no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking task type availability");
+      const taskType = await TaskType.findByPk(id);
+      if (!taskType) {
+        throw new Error("El tipo de tarea no existe");
       }
     }),
 ];
 
 export const updateTaskTypeValidations = [
+  param("id")
+    .isInt({ min: 1 })
+    .withMessage("El id debe ser un entero positivo")
+    .custom(async (id) => {
+      const taskType = await TaskType.findByPk(id);
+      if (!taskType) {
+        throw new Error("El tipo de tarea no existe");
+      }
+    }),
   body("task_type")
     .optional()
     .trim()
@@ -48,16 +53,15 @@ export const updateTaskTypeValidations = [
     .withMessage("Debe ser una cadena de caracteres")
     .isLength({ min: 1, max: 100 })
     .withMessage("El maximo de caracteres es de 100")
-    .custom(async (task_type) => {
-      try {
-        const taskTypeExiste = await TaskType.findOne({ where: { task_type } });
-        if (taskTypeExiste) {
-          return Promise.reject("El tipo de tarea ya existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking task type availability");
+    .custom(async (task_type, { req }) => {
+      const taskTypeExiste = await TaskType.findOne({
+        where: { task_type, id: { [Op.ne]: req.params.id } },
+      });
+      if (taskTypeExiste) {
+        throw new Error("Este tipo de tarea ya existe");
       }
-    }),
+    })
+    .escape(),
 ];
 
 export const deleteTaskTypeValidations = [
@@ -65,13 +69,9 @@ export const deleteTaskTypeValidations = [
     .isInt({ min: 1 })
     .withMessage("El id debe ser un entero positivo")
     .custom(async (id) => {
-      try {
-        const taskType = await TaskType.findByPk(id);
-        if (!taskType) {
-          return Promise.reject("El tipo de tarea no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking task type availability");
+      const taskType = await TaskType.findByPk(id);
+      if (!taskType) {
+        throw new Error("El tipo de tarea no existe");
       }
     }),
 ];

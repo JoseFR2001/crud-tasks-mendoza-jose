@@ -1,28 +1,12 @@
-import { Op } from "sequelize";
+import { matchedData } from "express-validator";
 import TaskType from "../models/task_type.model.js";
 
 export const createTaskType = async (req, res) => {
-  const { task_type } = req.body;
   try {
-    if (!task_type)
-      return res
-        .status(400)
-        .json({ message: "Los campos no deben estar vacíos" });
-
-    if (task_type.length > 100)
-      return res
-        .status(100)
-        .json({ message: "No debe tener más de 100 caracteres" });
-
-    const typeUnique = await TaskType.findOne({
-      where: { task_type: task_type },
-    });
-    if (typeUnique) return res.status(400).json({ message: "Ya existe tipo" });
-
     const typeTask = await TaskType.create(req.body);
     return res.status(201).json(typeTask);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    return res.status(500).json({ error: error.message });
   }
 };
 
@@ -51,32 +35,22 @@ export const getByAIdTaskType = async (req, res) => {
 };
 
 export const updateTaskType = async (req, res) => {
-  const { task_type } = req.body;
-
   try {
-    if (!task_type)
+    const data = matchedData(req, { locations: ["body"] });
+
+    if (Object.keys(data).length === 0) {
       return res
-        .status(400)
-        .json({ message: "Los campos no deben estar vacíos" });
-
-    if (task_type.length > 100)
-      return res
-        .status(100)
-        .json({ message: "No debe tener más de 100 caracteres" });
-
-    const typeUnique = await TaskType.findOne({
-      where: { task_type: task_type, id: { [Op.ne]: req.params.id } },
-    });
-    if (typeUnique) return res.status(400).json({ message: "Ya existe tipos" });
-
-    const [update] = await TaskType.update(req.body, {
+        .status(404)
+        .json({ message: "La data tiene que ser correcta" });
+    }
+    const [update] = await TaskType.update(data, {
       where: { id: req.params.id },
     });
-    if (update) {
+    if (update === 0) {
+      return res.status(404).json({ message: "No existe tipo" });
+    } else {
       const typeActualizado = await TaskType.findByPk(req.params.id);
       return res.status(200).json(typeActualizado);
-    } else {
-      return res.status(404).json({ message: "No existe tipo" });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });

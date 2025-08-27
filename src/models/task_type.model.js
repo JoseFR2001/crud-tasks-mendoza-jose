@@ -7,7 +7,9 @@ const TaskType = sequelize.define(
     task_type: { type: DataTypes.STRING(100), allowNull: false, unique: true },
   },
   {
-    timestamps: false,
+    paranoid: true,
+    createdAt: false,
+    updatedAt: false,
   }
 );
 

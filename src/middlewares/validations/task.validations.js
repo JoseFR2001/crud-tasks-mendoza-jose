@@ -1,6 +1,7 @@
 import { body, param } from "express-validator";
 import Task from "../../models/task.model.js";
 import User from "../../models/user.model.js";
+import { Op } from "sequelize";
 
 export const createTaskValidations = [
   body("title")
@@ -14,15 +15,12 @@ export const createTaskValidations = [
       "El titulo debe tener un minimo de 5 caracteres y un maximo de 100"
     )
     .custom(async (title) => {
-      try {
-        const tituloExiste = await Task.findOne({ where: { title } });
-        if (tituloExiste) {
-          return Promise.reject("El titulo debe ser unico");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking task availability");
+      const tituloExiste = await Task.findOne({ where: { title } });
+      if (tituloExiste) {
+        throw new Error("El titulo debe ser unico");
       }
-    }),
+    })
+    .escape(),
   body("description")
     .trim()
     .notEmpty()
@@ -36,7 +34,8 @@ export const createTaskValidations = [
     .notEmpty()
     .withMessage("Is complete no debe ser vacio")
     .isBoolean()
-    .withMessage("Is complete debe ser booleano"),
+    .withMessage("Is complete debe ser booleano")
+    .escape(),
   body("user_id")
     .trim()
     .notEmpty()
@@ -44,15 +43,12 @@ export const createTaskValidations = [
     .isInt({ min: 1 })
     .withMessage("El user_id debe ser un entero positivo")
     .custom(async (user_id) => {
-      try {
-        const user = await User.findByPk(user_id);
-        if (!user) {
-          return Promise.reject("El usuario no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking user availability");
+      const user = await User.findByPk(user_id);
+      if (!user) {
+        throw new Error("El usuario no existe");
       }
-    }),
+    })
+    .escape(),
 ];
 
 export const getByPkTaskValidations = [
@@ -60,13 +56,9 @@ export const getByPkTaskValidations = [
     .isInt({ min: 1 })
     .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
-      try {
-        const task = await Task.findByPk(id);
-        if (!task) {
-          return Promise.reject("La tarea no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking task availability");
+      const task = await Task.findByPk(id);
+      if (!task) {
+        throw new Error("La tarea no existe");
       }
     }),
 ];
@@ -76,13 +68,9 @@ export const updateTaskValidations = [
     .isInt({ min: 1 })
     .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
-      try {
-        const task = await Task.findByPk(id);
-        if (!task) {
-          return Promise.reject("La tarea no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking task availability");
+      const task = await Task.findByPk(id);
+      if (!task) {
+        throw new Error("La tarea no existe");
       }
     }),
   body("title")
@@ -96,16 +84,15 @@ export const updateTaskValidations = [
     .withMessage(
       "El titulo debe tener un minimo de 5 caracteres y un maximo de 100"
     )
-    .custom(async (title) => {
-      try {
-        const tituloExiste = await Task.findOne({ where: { title } });
-        if (tituloExiste) {
-          return Promise.reject("El titulo debe ser unico");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking task availability");
+    .custom(async (title, { req }) => {
+      const tituloExiste = await Task.findOne({
+        where: { title, id: { [Op.ne]: req.params.id } },
+      });
+      if (tituloExiste) {
+        throw new Error("El titulo debe ser unico");
       }
-    }),
+    })
+    .escape(),
   body("description")
     .optional()
     .trim()
@@ -114,14 +101,16 @@ export const updateTaskValidations = [
     .isString()
     .withMessage("La descripcion debe ser una cadena de caracteres")
     .isLength({ min: 1, max: 100 })
-    .withMessage("La descripcion debe tener un maximo de 100 caracteres"),
+    .withMessage("La descripcion debe tener un maximo de 100 caracteres")
+    .escape(),
   body("is_complete")
     .optional()
     .trim()
     .notEmpty()
     .withMessage("Is complete no debe ser vacio")
     .isBoolean()
-    .withMessage("Is complete debe ser booleano"),
+    .withMessage("Is complete debe ser booleano")
+    .escape(),
   body("user_id")
     .optional()
     .trim()
@@ -130,15 +119,12 @@ export const updateTaskValidations = [
     .isInt({ min: 1 })
     .withMessage("El user_id debe ser un entero positivo")
     .custom(async (user_id) => {
-      try {
-        const user = await User.findByPk(user_id);
-        if (!user) {
-          return Promise.reject("El usuario no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking user availability");
+      const user = await User.findByPk(user_id);
+      if (!user) {
+        throw new Error("El usuario no existe");
       }
-    }),
+    })
+    .escape(),
 ];
 
 export const deleteTaskValidations = [
@@ -146,13 +132,9 @@ export const deleteTaskValidations = [
     .isInt({ min: 1 })
     .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
-      try {
-        const task = await Task.findByPk(id);
-        if (!task) {
-          return Promise.reject("La tarea no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking task availability");
+      const task = await Task.findByPk(id);
+      if (!task) {
+        throw new Error("La tarea no existe");
       }
     }),
 ];

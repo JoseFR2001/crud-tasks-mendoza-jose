@@ -12,13 +12,9 @@ export const createAddInfoValidations = [
     .isLength({ min: 1, max: 20 })
     .withMessage("El numero telefonico no debe tener mas de 20 caracteres")
     .custom(async (phone_number) => {
-      try {
-        const numeroExiste = await AdditionalInfo.findOne(phone_number);
-        if (numeroExiste) {
-          return Promise.reject("El numero ya pertenece a otro usuario");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking additional info availability");
+      const numeroExiste = await AdditionalInfo.findOne(phone_number);
+      if (numeroExiste) {
+        throw new Error("El numero ya pertenece a otro usuario");
       }
     }),
   body("address")
@@ -36,13 +32,9 @@ export const createAddInfoValidations = [
     .isInt({ min: 1 })
     .withMessage("El user_id debe ser un entero positivo")
     .custom(async (user_id) => {
-      try {
-        const user = await User.findByPk(user_id);
-        if (!user) {
-          return Promise.reject("El usuario no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking user availability");
+      const user = await User.findByPk(user_id);
+      if (!user) {
+        throw new Error("El usuario no existe");
       }
     }),
 ];
@@ -52,13 +44,9 @@ export const getByPkAddInfoValidations = [
     .isInt({ min: 1 })
     .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
-      try {
-        const addInf = await AdditionalInfo.findByPk(id);
-        if (!addInf) {
-          return Promise.reject("La informacion adicional no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking task availability");
+      const addInf = await AdditionalInfo.findByPk(id);
+      if (!addInf) {
+        throw new Error("La informacion adicional no existe");
       }
     }),
 ];
@@ -74,13 +62,9 @@ export const updteAddInfValidations = [
     .isLength({ min: 1, max: 20 })
     .withMessage("El numero telefonico no debe tener mas de 20 caracteres")
     .custom(async (phone_number) => {
-      try {
-        const numeroExiste = await AdditionalInfo.findOne(phone_number);
-        if (numeroExiste) {
-          return Promise.reject("El numero ya pertenece a otro usuario");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking additional info availability");
+      const numeroExiste = await AdditionalInfo.findOne(phone_number);
+      if (numeroExiste) {
+        throw new Error("El numero ya pertenece a otro usuario");
       }
     }),
   body("address")
@@ -100,13 +84,9 @@ export const updteAddInfValidations = [
     .isInt({ min: 1 })
     .withMessage("El user_id debe ser un entero positivo")
     .custom(async (user_id) => {
-      try {
-        const user = await User.findByPk(user_id);
-        if (!user) {
-          return Promise.reject("El usuario no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking user availability");
+      const user = await User.findByPk(user_id);
+      if (!user) {
+        throw new Error("El usuario no existe");
       }
     }),
 ];
@@ -116,13 +96,9 @@ export const deleteAddInfValidations = [
     .isInt({ min: 1 })
     .withMessage("El id debe ser un número entero positivo")
     .custom(async (id) => {
-      try {
-        const addInf = await AdditionalInfo.findByPk(id);
-        if (!addInf) {
-          return Promise.reject("La informacion adicional no existe");
-        }
-      } catch (error) {
-        return Promise.reject("Error checking task availability");
+      const addInf = await AdditionalInfo.findByPk(id);
+      if (!addInf) {
+        throw new Error("La informacion adicional no existe");
       }
     }),
 ];
